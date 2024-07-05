@@ -58,11 +58,12 @@ public class UserController {
     }
 
     //Endpoints 
-    @GetMapping("/index")
+    @GetMapping("/reservas")
     public String index() {
         logger.debug("Accediendo index");
-        return "index"; // Vista para usuarios
+        return "reservas"; // Vista para usuarios
     }
+
 
     @GetMapping("/dashboard")
     public String dashboardPage() {

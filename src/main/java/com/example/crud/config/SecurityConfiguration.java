@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+//import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,12 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/register").permitAll()
+                .requestMatchers("/crear").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form ->form 
@@ -28,10 +32,11 @@ public class SecurityConfiguration {
                     .usernameParameter("email")
                     .passwordParameter("password")
                     .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/index", true) // Redirección después de un inicio de sesión exitoso
+                    .defaultSuccessUrl("/reservas", true) // Redirección después de un inicio de sesión exitoso
                     //.failureUrl("/?error=true") // URL de redirección en caso de error
                     //.defaultSuccessUrl("/index", true)
             )
+            //.csrf(AbstractHttpConfigurer::disable)
 
             
             .logout(config -> config.logoutSuccessUrl("/"))

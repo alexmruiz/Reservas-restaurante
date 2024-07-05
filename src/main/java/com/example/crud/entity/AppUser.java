@@ -2,7 +2,9 @@ package com.example.crud.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -23,6 +25,10 @@ public class AppUser {
     private String confirmPassword;
     private String role;
     private Date createAt;
+
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    private List<Booking> bookings = new ArrayList<>();
+
     
     public AppUser() {
     }
