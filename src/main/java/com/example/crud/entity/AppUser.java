@@ -94,6 +94,15 @@ public class AppUser {
         this.createAt = createAt;
     }
 
+    @Override
+    public String toString() {
+        return "AppUser [id=" + id + ", name=" + name + ", lastname=" + lastname + ", email=" + email + ", password="
+                + password + ", confirmPassword=" + confirmPassword + ", role=" + role + ", createAt=" + createAt
+                + ", bookings=" + bookings + "]";
+    }
+
+    
+
 }
 
     

@@ -4,8 +4,10 @@ package com.example.crud.controller;
 import com.example.crud.entity.AppUser;
 import com.example.crud.service.UserService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -23,7 +25,7 @@ public class UserController {
     private  UserService userService;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     
     //Endpoints para operaciones CRUD de usuario
 
@@ -57,17 +59,22 @@ public class UserController {
         return "redirect:/list";
     }
 
-    //Endpoints 
-    @GetMapping("/reservas")
-    public String index() {
-        logger.debug("Accediendo index");
-        return "reservas"; // Vista para usuarios
-    }
-
 
     @GetMapping("/dashboard")
     public String dashboardPage() {
         return "dashboard"; // Vista para administradores
     }
     
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Invalidar la sesión actual
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        // Redirigir a la página de inicio de sesión u otra página
+        return "redirect:/"; // ajusta el redireccionamiento según tu aplicación
+    }
 }

@@ -23,33 +23,31 @@
 </head>
 
 <body>
-  <header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="/reservas" class="logo d-flex align-items-center">
-        <span class="d-none d-lg-block">Restaurante FGZ</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-    <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
-        <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li>
+ <!-- ======= Header ======= -->
+ <header id="header" class="header fixed-top d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="index.html" class="logo d-flex align-items-center">
+      <span class="d-none d-lg-block">Restaurante FGZ</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+      <li class="nav-item">
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img src="/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-          <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+          <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${appUser != null ? appUser.name : 'Usuario'}">K. Anderson</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
-            <h6>Kevin Anderson</h6>
+            <h6 th:text="${appUser != null ? appUser.name : 'Nombre de Usuario No Disponible'}"></h6>
           </li>
           <li>
             <hr class="dropdown-divider">
           </li>
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <a class="dropdown-item d-flex align-items-center" href="/perfil">
               <i class="bi bi-person"></i>
               <span>Mi perfil</span>
             </a>
@@ -61,59 +59,70 @@
             </a>
           </li>
         </ul>
-      </ul>
-    </nav>
-  </header>
-
-  <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item">
-        <a class="nav-link " href="/reservas">
-          <i class="bi bi-calendar-event"></i>
-          <span>Reservar</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/historial">
-          <i class="bi bi-clock-history"></i>
-          <span>Historial de reservas</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-envelope-fill"></i>
-          <span>Contacto</span>
-        </a>
       </li>
     </ul>
-  </aside>
+  </nav>
+</header><!-- End Header -->
 
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link " href="/reservas">
+        <i class="bi bi-calendar-event"></i>
+        <span>Reservar</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="/historial">
+        <i class="bi bi-clock-history"></i>
+        <span>Historial de reservas</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-blank.html">
+        <i class="bi bi-envelope-fill"></i>
+        <span>Contacto</span>
+      </a>
+    </li>
+  </ul>
+</aside><!-- End Sidebar -->
   <main id="main" class="main">
     <section class="section dashboard">
       <div class="row">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Historial de reservas</h5>
+            <!-- Comprobación para mostrar tabla o mensaje -->
+            <th:block th:if="${bookings.empty}">
+              <p>No tiene reservas.</p>
+          </th:block>
+          <th:block th:unless="${bookings.empty}">
             <table class="table">
               <thead>
-                <tr>
-                  <th scope="col">Fecha de creación</th>
-                  <th scope="col">Número de comensales</th>
-                  <th scope="col">Zona</th>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Hora</th>
-                </tr>
+                  <tr>
+                      <th scope="col">Seleccionar</th>
+                      <th scope="col">Fecha de creación</th>
+                      <th scope="col">Número de comensales</th>
+                      <th scope="col">Zona</th>
+                      <th scope="col">Fecha</th>
+                      <th scope="col">Hora</th>
+                  </tr>
               </thead>
               <tbody>
-                <tr th:each="booking : ${bookings}">
-                  <td th:text="${booking.creationDate}">Fecha de creación</td>
-                  <td th:text="${booking.persons}">Número de comensales</td>
-                  <td th:text="${booking.zone}">Zona</td>
-                  <td th:text="${booking.date}">Fecha</td>
-                  <td th:text="${booking.time}">Hora</td>
-                </tr>
+                  <tr th:each="booking : ${bookings}">
+                      <td><input type="checkbox" name="selectedBookings" th:value="${booking.id}"></td>
+                      <td th:text="${booking.formattedCreateAt}">Fecha de Creación</td>
+                      <td th:text="${booking.persons}">Número de comensales</td>
+                      <td th:text="${booking.zone}">Zona</td>
+                      <td th:text="${booking.formattedDate}">Fecha</td>
+                      <td th:text="${booking.time}">Hora</td>
+                  </tr>
               </tbody>
-            </table>
+          </table>
+          <button class="btn btn-primary"onclick="editBooking()">Editar</button>
+          <button class="btn btn-danger" onclick="confirmDelete()">Eliminar</button>
+        </th:block>
           </div>
         </div>
       </div>
@@ -125,6 +134,41 @@
       Designed by AMRdeveloper
     </div>
   </footer>
+
+  <script>
+    function getSelectedBookings() {
+        const checkboxes = document.querySelectorAll('input[name="selectedBookings"]:checked');
+        const ids = [];
+        checkboxes.forEach((checkbox) => {
+            ids.push(checkbox.value);
+        });
+        return ids;
+    }
+
+    function confirmDelete() {
+        const selectedBookings = getSelectedBookings();
+        if (selectedBookings.length === 0) {
+            alert("Por favor, selecciona al menos una reserva para eliminar.");
+            return;
+        }
+        const confirmed = confirm("¿Estás seguro de que quieres eliminar las reservas seleccionadas?");
+        if (confirmed) {
+            // Redirigir al controlador de eliminación con los IDs seleccionados
+            window.location.href = `/deleteBookings?ids=${selectedBookings.join(',')}`;
+        }
+    }
+
+    function editBooking() {
+        const selectedBookings = getSelectedBookings();
+        if (selectedBookings.length !== 1) {
+            alert("Por favor, selecciona una única reserva para editar.");
+            return;
+        }
+        // Redirigir al formulario de edición con el ID seleccionado
+        window.location.href = `/editBooking?id=${selectedBookings[0]}`;
+    }
+</script>
+
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,7 @@ public class Booking {
     private String zone;
     private LocalDate date;
     private LocalTime time;
+    private LocalTime endTime;
     private LocalDateTime createAt;
 
     public void setAppUser(AppUser appUser) {
@@ -120,6 +123,35 @@ public class Booking {
     public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getFormattedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return date.format(formatter);
+    }
+
+    public String getFormattedTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
+    }
+
+    public String getFormattedCreateAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return createAt.format(formatter);
+    }
+
+   
+
+
+
+   
 
     
 
