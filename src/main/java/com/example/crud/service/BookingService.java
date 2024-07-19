@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.crud.entity.AppUser;
 import com.example.crud.entity.Booking;
@@ -22,7 +23,7 @@ public class BookingService {
     @Autowired
     private UserService userService;
 
-    private static final int MAX_PERSONS_COMEDOR = 80; //40 Mesas*2 personas
+    private static final int MAX_PERSONS_SALON = 80; //40 Mesas*2 personas
     private static final int MAX_PERSONS_TERRAZA = 30; //15 Mesas*2 personas
     
     public boolean isAvailable(String zone, LocalDate date, LocalTime time, int persons) {
@@ -32,8 +33,8 @@ public class BookingService {
 
         int totalPersons = bookings.stream().mapToInt(Booking::getPersons).sum();
 
-        if (zone.equals("Comedor")) {
-            return (totalPersons + persons) <= MAX_PERSONS_COMEDOR;
+        if (zone.equals("Salon")) {
+            return (totalPersons + persons) <= MAX_PERSONS_SALON;
         } else if (zone.equals("Terraza")) {
             return (totalPersons + persons) <= MAX_PERSONS_TERRAZA;
         }
@@ -66,10 +67,19 @@ public class BookingService {
         //Guardar la entidad actualizada
         bookingRepository.save(booking);
     }
-
+    
+    @Transactional
     public Booking saveBooking(Booking booking) {
         if (isAvailable(booking.getZone(), booking.getDate(), booking.getTime(), booking.getPersons())) {
             booking.setEndTime(booking.getTime().plusMinutes(60)); // Establecer la hora de finalización
+            
+            // Lógica para establecer isten basado en el campo text
+            if (booking.getText() == null || booking.getText().isEmpty()) {
+                booking.setIsten(false);
+            } else {
+                booking.setIsten(true);
+            }
+            
             return bookingRepository.save(booking);
         } else {
             throw new RuntimeException("No hay disponibilidad para la hora y zona seleccionadas.");
@@ -103,6 +113,23 @@ public class BookingService {
 
         // Buscar reservas por usuario
         return bookingRepository.findByAppUser(appUser);
+    }
+
+    public List<Booking> findAll() {
+        return bookingRepository.findAll();
+    }
+
+    // Método para obtener todas las reservas junto con los datos del usuario
+    public List<Booking> getAllBookingsWithUserData() {
+        List<Booking> bookings = bookingRepository.findAll();
+        for (Booking booking : bookings) {
+            // Cargar el usuario asociado a la reserva
+            AppUser appUser = booking.getAppUser(); // Asegúrate de que la relación esté cargada correctamente
+
+            System.out.println("Usuarios: "+ appUser);
+            // Aquí puedes hacer operaciones con appUser si es necesario
+        }
+        return bookings;
     }
 
 }

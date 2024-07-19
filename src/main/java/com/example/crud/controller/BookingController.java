@@ -4,8 +4,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +20,7 @@ import com.example.crud.entity.Booking;
 import com.example.crud.service.BookingService;
 import com.example.crud.service.UserService;
 
+
 @Controller
 public class BookingController {
 
@@ -28,26 +29,22 @@ public class BookingController {
     @Autowired
     private UserService userService;
 
- @PostMapping("/create")
-public String createBooking(@ModelAttribute("booking") Booking booking, Model model, RedirectAttributes redirectAttributes) {
-    // Obtener usuario autenticado
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String email = auth.getName(); // Email del usuario autenticado
+    @PostMapping("/create")
+    public String createBooking(@ModelAttribute("booking") Booking booking, Model model, RedirectAttributes redirectAttributes) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-    // Buscar al usuario por su email
-    AppUser appUser = userService.findByEmail(email);
+        AppUser appUser = userService.findByEmail(email);
+        booking.setAppUser(appUser);
 
-    // Asignar el usuario a la reserva
-    booking.setAppUser(appUser);
-
-    try {
-        bookingService.saveBooking(booking);
-        return "redirect:/historial";
-    } catch (RuntimeException e) {
-        model.addAttribute("error", e.getMessage());
-        return "reservas";
+        try {
+            bookingService.saveBooking(booking);
+            return "redirect:/historial";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "reservas";
+        }
     }
-}
 
 //Endpoints 
 @GetMapping("/reservas")
@@ -136,8 +133,6 @@ private List<String> generateHorarios() {
         return horarios;
     }
 
-    @GetMapping("/perfil")
-    public String profile(){
-        return "users-profile";
-    }
+   
+    
 }

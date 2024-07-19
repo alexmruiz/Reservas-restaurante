@@ -73,7 +73,7 @@
               </a>
             </li>
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="/logout">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Cerrar sesión</span>
               </a>
@@ -100,31 +100,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-envelope-fill"></i>
-          <span>Contacto</span>
-        </a>
-      </li>
-    </ul>
-  </aside><!-- End Sidebar -->
-
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item">
-        <a class="nav-link " href="/reservas">
-          <i class="bi bi-calendar-event"></i>
-          <span>Reservar</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/historial">
-          <i class="bi bi-clock-history"></i>
-          <span>Historial de reservas</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
+        <a class="nav-link collapsed" href="/formulario">
           <i class="bi bi-envelope-fill"></i>
           <span>Contacto</span>
         </a>
@@ -149,24 +125,33 @@
             <form class="row g-3"th:action="@{/updateBooking}" id="formUpdate" th:object="${booking}" method="post">
                 <input type="hidden" th:field="*{id}"/>
 
-                <div class="row mb-3">
-                    <label for="numComensales" class="col-sm-2 col-form-label">Número de comensales*</label>
-                    <div class="col-sm-10">
-                        <select class="form-select" id="numComensales" name="persons" aria-label="Default select example" required>
-                            <option selected disabled>Abra este menú desplegable</option>
-                            <option value="1">Uno</option>
-                            <option value="2">Dos</option>
-                            <option value="3">Tres</option>
-                            <option value="4">Cuatro</option>
-                            <option value="5">Cinco</option>
-                            <option value="6">Seis</option>
-                            <option value="7">Siete</option>
-                            <option value="8">Ocho</option>
-                            <option value="9">Nueve</option>
-                            <option value="10">Diez</option>
-                        </select>
-                    </div>
-                </div>
+                <!-- Número de comensales (visible solo si text es null) -->
+    <div class="row mb-3" th:if="${booking.text == null}">
+      <label for="numComensales" class="col-sm-2 col-form-label">Número de comensales*</label>
+      <div class="col-sm-10">
+          <select class="form-select" id="numComensales" name="persons" aria-label="Default select example" required>
+              <option selected disabled>Abra este menú desplegable</option>
+              <option value="1">Uno</option>
+              <option value="2">Dos</option>
+              <option value="3">Tres</option>
+              <option value="4">Cuatro</option>
+              <option value="5">Cinco</option>
+              <option value="6">Seis</option>
+              <option value="7">Siete</option>
+              <option value="8">Ocho</option>
+              <option value="9">Nueve</option>
+              <option value="10">Diez</option>
+          </select>
+      </div>
+  </div>
+
+  <!-- Campo de texto (visible solo si text no es null) -->
+  <div class="row mb-3" th:if="${booking.text != null}">
+      <label for="text" class="col-sm-2 col-form-label">Texto</label>
+      <div class="col-sm-10">
+          <textarea class="form-control" id="text" name="text" style="height: 100px" th:text="${booking.text}"></textarea>
+      </div>
+  </div>
                   <div class="row mb-3">
                       <label for="zone" class="col-sm-2 col-form-label">Zona*</label>
                       <div class="col-sm-10">

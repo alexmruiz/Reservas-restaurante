@@ -54,7 +54,8 @@
                           <h5 class="card-title text-center pb-0 fs-4">Crear una cuenta</h5>
                           <p class="text-center small">Ingrese sus datos personales para crear una cuenta</p>
                       </div>
-                  
+                      <!-- Mensaje de éxito -->
+                      <div th:if="${success}" class="alert alert-success">¡Registro exitoso! Puedes <a th:href="@{/}">iniciar sesión aquí</a>.</div>
                       <form method="post" th:action="@{/register}" th:object="${registerDto}">
                           <!-- Campo oculto para CSRF -->
                           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -78,39 +79,31 @@
                   
                           <div class="col-12 mb-3">
                               <label for="yourEmail" class="form-label">Tu correo electrónico*</label>
-                              <!--<div class="input-group has-validation">
-                                  <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                  <input type="email" name="email" class="form-control" id="yourEmail" th:field="*{email}" required>
-                                  <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">Por favor, ingrese una dirección de correo electrónico válida.</div>
-                              </div>-->
                               <div class="col-sm-8">
-                                <input type="email" name="email" class="form-control" id="yourEmail" th:field="*{email}"required>
+                                <input type="email" name="email" class="form-control" id="yourEmail" th:field="*{email}" 
+                                required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Por favor ingrese un correo electrónico válido">
                                 <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>
                               </div>
                           </div>
                           
                           <div class="col-12 mb-3">
                               <label for="yourPassword" class="form-label">Contraseña*</label>
-                              <!--<input type="password" name="password" class="form-control" id="yourPassword" th:field="*{password}" required>
-                              <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">Por favor, ingrese su contraseña.</div>-->
                               <div class="col-sm-8">
-                                <input type="password" name="password" class="form-control" id="yourPassword" th:field="*{password}" required>
+                                <input type="password" name="password" class="form-control" id="yourPassword" th:field="*{password}" 
+                                minlength="6" placeholder="Mínimo 6 caracteres">
                                 <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>
                               </div>
                           </div>
                           
                           <div class="col-12 mb-3">
                               <label for="confirmPassword" class="form-label">Confirmar contraseña*</label>
-                              <!--<input type="password" name="confirmPassword" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
-                              <div th:if="${#fields.hasErrors('confirmPassword')}" class="invalid-feedback">Por favor, ingrese la misma contraseña nuevamente para confirmar.</div>-->
                               <div class="col-sm-8">
                                 <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
                                 <p th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}"></p>
                               </div>
                           </div>
                   
-                          <!-- Mensaje de éxito -->
-                          <div th:if="${success}" class="alert alert-success">¡Registro exitoso! Puedes <a th:href="@{/}">iniciar sesión aquí</a>.</div>
+                          
                   
                           <div class="col-12 mb-3">
                               <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>

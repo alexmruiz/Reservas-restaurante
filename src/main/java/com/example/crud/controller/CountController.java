@@ -2,13 +2,14 @@ package com.example.crud.controller;
 
 import com.example.crud.entity.RegisterDto;
 import com.example.crud.entity.AppUser;
+import com.example.crud.entity.Booking;
 import com.example.crud.entity.LoginForm;
 import com.example.crud.repository.UserRepository;
+import com.example.crud.service.BookingService;
 
 import jakarta.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -31,16 +33,30 @@ public class CountController {
     private  UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BookingService bookingService;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+
+    
 
     //Endpoints para autenticación y registro
     @GetMapping("/")
     public String login(Model model) {
-        logger.debug("Accediendo a la página de inicio de sesión.");
         model.addAttribute("loginForm", new LoginForm()); // Agrega un nuevo objeto LoginForm al modelo
         return "login"; // Devuelve la vista del formulario de inicio de sesión
     }
+
+    @GetMapping("/admin-restaurante")
+    public String admin(Model model) {
+        List<Booking> bookings = bookingService.getAllBookingsWithUserData();
+        model.addAttribute("bookings", bookings);
+        return "admin";
+    }
+
+    
+
+
     
 
     @GetMapping("/register")
@@ -76,7 +92,7 @@ public class CountController {
             newUser.setName(registerDto.getName());
             newUser.setLastname(registerDto.getLastname());
             newUser.setEmail(registerDto.getEmail());
-            newUser.setRole("client");
+            newUser.setRole("ROLE_CLIENT");
             newUser.setCreateAt(new Date());
             newUser.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
@@ -84,7 +100,7 @@ public class CountController {
 
             model.addAttribute("registerDto", new RegisterDto());
             model.addAttribute("success", true);
-            return "redirect:/";
+            return "register";
 
         } catch (Exception ex) {
             result.addError(new FieldError("registerDto", "name", ex.getMessage()));

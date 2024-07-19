@@ -8,5 +8,7 @@ import com.example.crud.entity.AppUser;
 
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, Long> {
-    public AppUser findByEmail(String email); // Método personalizado para encontrar por correo electrónico
+    public AppUser findByEmail(String email);// Método personalizado para encontrar por correo electrónico
+     
+   
 }

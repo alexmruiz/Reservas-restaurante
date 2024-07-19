@@ -1,20 +1,23 @@
 package com.example.crud.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-//import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     
 
@@ -27,21 +30,15 @@ public class SecurityConfiguration {
                 .requestMatchers("/crear").authenticated()
                 .anyRequest().authenticated()
             )
-            .formLogin(form ->form 
-                    .loginPage("/")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/reservas", true) // Redirección después de un inicio de sesión exitoso
-                    //.failureUrl("/?error=true") // URL de redirección en caso de error
-                    //.defaultSuccessUrl("/index", true)
+            .formLogin(form -> form
+                .loginPage("/")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginProcessingUrl("/login")
+                .successHandler(customAuthenticationSuccessHandler)
             )
-            //.csrf(AbstractHttpConfigurer::disable)
-
-            
             .logout(config -> config.logoutSuccessUrl("/"))
             .build();
-      
     }
 
     @Bean
@@ -53,6 +50,4 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    
 }

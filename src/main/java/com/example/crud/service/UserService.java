@@ -9,9 +9,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -23,20 +24,20 @@ public class UserService implements UserDetailsService {
     private  PasswordEncoder passwordEncoder;
 
     
-    @Override
+  @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser appUser = userRepository.findByEmail(email);
 
-        if (appUser != null) {
-           var springUser = User.withUsername(appUser.getEmail())
-                .password(appUser.getPassword())
-                .roles(appUser.getRole())
-                .build();
-                return springUser;            
-    }
+        if (appUser == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
-    return null;
-        
+        var springUser = User.withUsername(appUser.getEmail())
+                .password(appUser.getPassword())
+                .authorities(Collections.singleton(new SimpleGrantedAuthority(appUser.getRole())))
+                .build();
+
+        return springUser;
     }
     
     // Obtiene todos los usuarios
@@ -50,20 +51,25 @@ public class UserService implements UserDetailsService {
         return userRepository.save(appUser);
     }
 
-    // Actualiza un usuario existente
-    public AppUser updateUser(long id, AppUser appUser) {
-        AppUser userExist = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+  // Actualiza un usuario existente
+    public AppUser updateUser(AppUser appUser) {
+    AppUser userExist = userRepository.findById(appUser.getId())
+            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
 
-        userExist.setName(appUser.getName());
-        userExist.setLastname(appUser.getLastname());
-        userExist.setEmail(appUser.getEmail());
-        // Encriptar la contraseña solo si es nueva
-        if (!appUser.getPassword().equals(userExist.getPassword())) {
-            userExist.setPassword(passwordEncoder.encode(appUser.getPassword()));
-        }
-        return userRepository.save(userExist);
+    // Verificar si el correo electrónico ya existe y pertenece a otro usuario
+    AppUser existingUser = userRepository.findByEmail(appUser.getEmail());
+    if (existingUser != null && existingUser.getId() != appUser.getId()) {
+        throw new IllegalArgumentException("El correo electrónico ya está en uso.");
     }
+
+    userExist.setName(appUser.getName());
+    userExist.setLastname(appUser.getLastname());
+    userExist.setEmail(appUser.getEmail());
+    userExist.setPhone(appUser.getPhone()); // Asegúrate de tener este campo en la entidad
+
+    return userRepository.save(userExist);
+}
+
 
     // Elimina un usuario
     public void deleteUser(long id) {
@@ -75,6 +81,28 @@ public class UserService implements UserDetailsService {
     public AppUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+    public String changePassword(String email, String currentPassword, String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            return "Las nuevas contraseñas no coinciden";
+        }
+
+        AppUser appUser = userRepository.findByEmail(email);
+        if (appUser == null || !passwordEncoder.matches(currentPassword, appUser.getPassword())) {
+            return "La contraseña actual es incorrecta";
+        }
+
+        appUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(appUser);
+        return "Contraseña actualizada con éxito";
+    }
+
+    public AppUser saveUserr(AppUser appUser) {
+        // Codificar la contraseña antes de guardar
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+
+        return userRepository.save(appUser);
+    }
+    
 
     
     

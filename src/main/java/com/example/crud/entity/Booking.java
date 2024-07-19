@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +23,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser appUser;
 
@@ -34,10 +35,9 @@ public class Booking {
     private LocalTime time;
     private LocalTime endTime;
     private LocalDateTime createAt;
+    private String text;
+    private Boolean isten;
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
     
     //Constructor
     public Booking() {
@@ -45,6 +45,15 @@ public class Booking {
     }
 
     //Getters y setters
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
     public Long getId() {
         return id;
     }
@@ -130,6 +139,22 @@ public class Booking {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setIsten(boolean isten) {
+        this.isten = isten;
+    }
+
+    public boolean isIsten() {
+        return isten;
     }
 
     public String getFormattedDate() {

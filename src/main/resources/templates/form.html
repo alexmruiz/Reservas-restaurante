@@ -7,16 +7,10 @@
   <title>Restaurante FGZ Reservas</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-
-  <!-- Favicons -->
   <link href="/img/favicon.png" rel="icon">
   <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
@@ -24,22 +18,8 @@
   <link href="/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
   <link href="/css/style.css" rel="stylesheet">
-  
-  <style>
-    /* Estilo básico para el spinner */
-    #spinner {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      top: 50%;
-      left: 50%;
-      margin-right: -50%;
-      transform: translate(-50%, -50%);
-    }
-  </style>
 </head>
 
 <body>
@@ -113,123 +93,70 @@
       <div class="row">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Elija los detalles de su reserva</h5>
-
-            <!-- Mostrar mensaje de éxito si está presente -->
-            <div th:if="${successMessage}" id="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
-              <span th:text="${successMessage}"></span>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-            <div class="alert alert-danger alert-dismissible fade show" th:if="${not #strings.isEmpty(errorMessage)}">
-              <span th:text="${errorMessage}"></span>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-
-          <!-- Mensaje de error -->
-          <div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
-
+            <h5 class="card-title">Formulario de contacto</h5>
 
             <form id="bookingForm" th:action="@{/create}" th:object="${booking}" method="post" onsubmit="return validateForm()">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-              
+
               <div class="row mb-3">
-                <label for="numComensales" class="col-sm-2 col-form-label">Número de comensales*</label>
+                <label for="zone" class="col-sm-2 col-form-label">Zona*</label>
                 <div class="col-sm-10">
-                    <select class="form-select" id="numComensales" name="persons" aria-label="Default select example" required>
-                        <option selected disabled>Abra este menú desplegable</option>
-                        <option value="1">Uno</option>
-                        <option value="2">Dos</option>
-                        <option value="3">Tres</option>
-                        <option value="4">Cuatro</option>
-                        <option value="5">Cinco</option>
-                        <option value="6">Seis</option>
-                        <option value="7">Siete</option>
-                        <option value="8">Ocho</option>
-                        <option value="9">Nueve</option>
-                        <option value="10">Diez</option>
+                    <select class="form-select" id="zone" name="zone" required>
+                        <option selected disabled>Seleccione una zona</option>
+                        <option value="Salon">Salón</option>
+                        <option value="Terraza">Terraza</option>
                     </select>
                 </div>
-              </div>
-              
+            </div>
+            
               <div class="row mb-3">
-                  <label for="zone" class="col-sm-2 col-form-label">Zona*</label>
+                  <label for="inputDate" class="col-sm-2 col-form-label">Fecha</label>
                   <div class="col-sm-10">
-                      <select class="form-select" id="zone" name="zone" required>
-                          <option selected disabled>Seleccione una zona</option>
-                          <option value="Salon">Salón</option>
-                          <option value="Terraza">Terraza</option>
-                      </select>
+                      <input type="date" class="form-control" id="inputDate" name="date" required>
                   </div>
               </div>
-              
               <div class="row mb-3">
-                  <label for="date" class="col-sm-2 col-form-label">Fecha*</label>
+                  <label for="inputTime" class="col-sm-2 col-form-label">Hora</label>
                   <div class="col-sm-10">
-                      <input type="date" class="form-control" id="date" name="date" required>
+                      <input type="time" class="form-control" id="inputTime" name="time" required>
                   </div>
               </div>
-              
               <div class="row mb-3">
-                <label for="time" class="col-sm-2 col-form-label">Hora*</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="time" name="time" required>
-                        <option th:each="horario : ${horarios}" th:value="${horario}" th:text="${horario}"></option>
-                    </select>
-                </div>
+                  <label for="inputTextarea" class="col-sm-2 col-form-label">Comentarios</label>
+                  <div class="col-sm-10">
+                      <textarea class="form-control" id="inputTextarea" name="text" style="height: 100px"></textarea>
+                  </div>
               </div>
-              
               <div class="row mb-3">
                   <div class="col-sm-10 offset-sm-2">
-                      <button type="submit" class="btn btn-primary">Reservar</button>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
                   </div>
               </div>
-            </form>
+          </form>
+          <div class="spinner-border text-info" role="status" id="spinner" style="display: none;">
+              <span class="visually-hidden">Cargando...</span>
+          </div>
             
-            <div class="spinner-border text-info" role="status" id="spinner">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-          
-            <br><br>
-            
-            <div class="text-center">
-              <h6>Recuerde que para realizar una reserva de más de 10 personas tiene que hacerlo a través del formulario de contacto.</h6>
-            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="credits">
       Designed by AMRdeveloper
     </div>
-  </footer><!-- End Footer -->
+  </footer>
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/vendor/chart.js/chart.umd.js"></script>
-  <script src="/vendor/echarts/echarts.min.js"></script>
-  <script src="/vendor/quill/quill.js"></script>
-  <script src="/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="/vendor/tinymce/tinymce.min.js"></script>
-  <script src="/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="/js/main.js"></script>
-
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
     function validateForm() {
-        var dateInput = document.getElementById('date').value;
-        var timeInput = document.getElementById('time').value;
+        var dateInput = document.getElementById('inputDate').value;
+        var timeInput = document.getElementById('inputTime').value;
 
         var currentDate = new Date();
-        var selectedDate = new Date(dateInput + 'T' + timeInput); // Combinar fecha y hora
+        var selectedDate = new Date(dateInput + 'T' + timeInput);
 
         // Verificar que la fecha y hora no sean anteriores a la fecha y hora actual
         if (selectedDate <= currentDate) {
@@ -248,11 +175,21 @@
     }
 </script>
 
+ 
 
 
-  
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-4aifDrl0o7C6JR+EQJv9WCyVzfV6b+KpNNlvX7Pyo7gGlmJ5Blh4Bf6QZ+J6ysbH" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script src="/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/chart.js/chart.umd.js"></script>
+  <script src="/vendor/echarts/echarts.min.js"></script>
+  <script src="/vendor/quill/quill.js"></script>
+  <script src="/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="/vendor/tinymce/tinymce.min.js"></script>
+  <script src="/vendor/php-email-form/validate.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/locales/es.min.js"></script>
+  <script src="/js/main.js"></script>
+
 </body>
 </html>

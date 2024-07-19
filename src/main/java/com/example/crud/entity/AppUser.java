@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Entity
 @Table(name="users")
 public class AppUser {
@@ -25,13 +24,15 @@ public class AppUser {
     private String confirmPassword;
     private String role;
     private Date createAt;
+    private String phone;
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Booking> bookings = new ArrayList<>();
-
     
     public AppUser() {
     }
+
+    // Getters y Setters
 
     public long getId() {
         return id;
@@ -77,7 +78,10 @@ public class AppUser {
         return confirmPassword;
     }
 
-   
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
     public String getRole() {
         return role;
     }
@@ -94,15 +98,26 @@ public class AppUser {
         this.createAt = createAt;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
     @Override
     public String toString() {
         return "AppUser [id=" + id + ", name=" + name + ", lastname=" + lastname + ", email=" + email + ", password="
                 + password + ", confirmPassword=" + confirmPassword + ", role=" + role + ", createAt=" + createAt
-                + ", bookings=" + bookings + "]";
+                + ", phone=" + phone + ", bookings=" + bookings + "]";
     }
-
-    
-
 }
-
-    

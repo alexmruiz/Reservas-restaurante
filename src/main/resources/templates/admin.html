@@ -70,7 +70,7 @@
       <li class="nav-item">
         <a class="nav-link " href="/reservas">
           <i class="bi bi-calendar-event"></i>
-          <span>Reservar</span>
+          <span>Reservados</span>
         </a>
       </li>
       <li class="nav-item">
@@ -93,42 +93,37 @@
       <div class="row">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Historial de reservas</h5>
-            <!-- Comprobación para mostrar tabla o mensaje -->
-            <th:block th:if="${bookings.empty}">
-              <p>No tiene reservas.</p>
-          </th:block>
-          <th:block th:unless="${bookings.empty}">
+            <h5 class="card-title">Reservados</h5>
             <table class="table">
               <thead>
                   <tr>
-                      <th scope="col">Seleccionar</th>
-                      <th scope="col">Fecha de creación</th>
-                      <th scope="col">Número de comensales</th>
+                      <th scope="col">#</th>
+            
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Apellido</th>
+                      <th scope="col">Personas</th>
                       <th scope="col">Zona</th>
-                      <th scope="col">Texto</th>
                       <th scope="col">Fecha</th>
                       <th scope="col">Hora</th>
-
                   </tr>
               </thead>
               <tbody>
-                  <tr th:each="booking : ${bookings}">
-                      <td><input type="checkbox" class="form-check-input" name="selectedBookings" th:value="${booking.id}"></td>
-                      <td th:text="${booking.formattedCreateAt}">Fecha de Creación</td>
-                      <td th:text="${booking.persons}">Número de comensales</td>
+                  <!-- Utiliza Thymeleaf para iterar sobre cada booking y mostrar los datos -->
+                  <tr th:each="booking, iterStat : ${bookings}">
+                      <td th:text="${iterStat.index + 1}">1</td> <!-- Muestra el número secuencial -->
+                      <td th:text="${booking.appUser.name}">Nombre Usuario</td>
+                      <td th:text="${booking.appUser.lastname}">Apellido</td>
+                      <td th:text="${booking.persons}">2</td>
                       <td th:text="${booking.zone}">Zona</td>
-                      <td th:text="${booking.text}">Texto</td>
-                      <td th:text="${booking.formattedDate}">Fecha</td>
-                      <td th:text="${booking.time}">Hora</td>
+                      <td th:text="${booking.getFormattedDate()}">Fecha</td>
+                      <td th:text="${booking.getFormattedTime()}">Hora</td>
                   </tr>
               </tbody>
           </table>
-          <button class="btn btn-primary"onclick="editBooking()">Editar</button>
-          <button class="btn btn-danger" onclick="confirmDelete()">Eliminar</button>
-        </th:block>
+          
           </div>
         </div>
+     
       </div>
     </section>
   </main>
@@ -139,39 +134,7 @@
     </div>
   </footer>
 
-  <script>
-    function getSelectedBookings() {
-        const checkboxes = document.querySelectorAll('input[name="selectedBookings"]:checked');
-        const ids = [];
-        checkboxes.forEach((checkbox) => {
-            ids.push(checkbox.value);
-        });
-        return ids;
-    }
 
-    function confirmDelete() {
-        const selectedBookings = getSelectedBookings();
-        if (selectedBookings.length === 0) {
-            alert("Por favor, selecciona al menos una reserva para eliminar.");
-            return;
-        }
-        const confirmed = confirm("¿Estás seguro de que quieres eliminar las reservas seleccionadas?");
-        if (confirmed) {
-            // Redirigir al controlador de eliminación con los IDs seleccionados
-            window.location.href = `/deleteBookings?ids=${selectedBookings.join(',')}`;
-        }
-    }
-
-    function editBooking() {
-        const selectedBookings = getSelectedBookings();
-        if (selectedBookings.length !== 1) {
-            alert("Por favor, selecciona una única reserva para editar.");
-            return;
-        }
-        // Redirigir al formulario de edición con el ID seleccionado
-        window.location.href = `/editBooking?id=${selectedBookings[0]}`;
-    }
-</script>
 
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
