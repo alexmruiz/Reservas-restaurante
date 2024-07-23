@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Restaurante FGZ Reservas</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link href="/img/favicon.png" rel="icon">
+  <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="/vendor/simple-datatables/style.css" rel="stylesheet">
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+  <link href="/css/style.css" rel="stylesheet">
+  <style>
+    .form-container {
+      display: flex;
+      gap: 20px; /* Espacio entre formularios */
+      margin-bottom: 20px;
+    }
+
+    .form-section {
+      flex: 1; /* Ocupa el 50% del ancho del contenedor */
+    }
+
+    .form-section form {
+      margin-bottom: 20px; /* Espacio debajo de los formularios */
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 500px;
+      display: none; /* Ocultamos las gráficas por defecto */
+      margin-bottom: 20px; /* Espacio debajo de las gráficas */
+    }
+
+    .chart-container.active {
+      display: block; /* Mostramos la gráfica activa */
+    }
+
+    .chart-container canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href=" " class="logo d-flex align-items-center">
+        <span class="d-none d-lg-block">Restaurante FGZ</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${appUser != null ? appUser.name : 'Usuario'}">K. Anderson</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6 th:text="${appUser != null ? appUser.name : 'Nombre de Usuario No Disponible'}"></h6>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="/perfil">
+                <i class="bi bi-person"></i>
+                <span>Mi perfil</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="/logout">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Cerrar sesión</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header><!-- End Header -->
+
+   <!-- ======= Sidebar ======= -->
+   <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link " href="/admin-restaurante">
+          <i class="bi bi-calendar-event"></i>
+          <span>Reservados</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/estadisticas">
+            <i class="bi bi-bar-chart"></i>
+            <span>Estadísticas</span>
+        </a>
+    </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/clientes">
+          <i class="bi bi-people"></i>
+          <span>Usuarios</span>
+        </a>
+      </li>
+    </ul>
+  </aside><!-- End Sidebar -->
+  
+  <main id="main" class="main">
+    <section class="section dashboard">
+      <div class="row">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Estadísticas</h5>
+            
+            <div class="form-container">
+              <!-- Formulario de reservas -->
+              <div class="form-section">
+                <form action="#" th:action="@{/estadisticas/resultados}" method="get">
+                  <div class="mb-3">
+                    <label for="year" class="form-label">Año:</label>
+                    <input type="number" id="year" name="year" class="form-control" th:value="${year}" required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="type" class="form-label">Tipo de gráfico:</label>
+                    <select id="type" name="type" class="form-select" required onchange="this.form.submit()">
+                        <option value="week" th:selected="${type == 'week'}">Reservas por Semana</option>
+                        <option value="month" th:selected="${type == 'month'}">Reservas por Mes</option>
+                        <option value="day" th:selected="${type == 'day'}">Reservas por Día</option>
+                    </select>
+                  </div>
+                  
+                  <div class="col-12 mb-3">
+                    <button class="btn btn-primary w-100" type="submit">
+                      Generar gráfico
+                    </button>
+                  </div>
+                </form>
+              </div>
+              
+              <!-- Formulario de mejor cliente -->
+              <div class="form-section">
+                <form action="#" th:action="@{/mejor_cliente}" method="get" id="mejorClienteForm">
+                  <div class="mb-3">
+                    <label for="startDate" class="form-label">Fecha de Inicio:</label>
+                    <input type="date" id="startDate" name="startDate" class="form-control" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="endDate" class="form-label">Fecha de Fin:</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control" required>
+                  </div>
+
+                  <div class="col-12 mb-3">
+                    <button class="btn btn-primary w-100" type="submit">
+                      Generar gráfico
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Gráfica de reservas -->
+            <div class="chart-container" id="reservasChartContainer" th:classappend="${type == 'week' || type == 'month' || type == 'day' ? 'active' : ''}">
+              <h6 th:text="${title}"></h6>
+              <canvas id="chart-container"></canvas>
+            </div>
+
+            <!-- Gráfica de mejor cliente -->
+            <div class="chart-container" id="mejorClienteChartContainer" th:classappend="${bestCustomerData != null ? 'active' : ''}">
+              <h6 th:text="${bestCustomerTitle}"></h6>
+              <canvas id="chart-container1"></canvas>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="credits">
+      Designed by AMRdeveloper
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const reservasChartContainer = document.getElementById('reservasChartContainer');
+        const mejorClienteChartContainer = document.getElementById('mejorClienteChartContainer');
+        
+        const reservasCtx = document.getElementById('chart-container').getContext('2d');
+        const reservasData = /*[[${chartData}]]*/ {};
+        console.log("Datos de reservas:", reservasData);
+        
+        if (reservasData && typeof reservasData === 'object' && Object.keys(reservasData).length > 0) {
+            const labels = Object.keys(reservasData);
+            const values = Object.values(reservasData);
+            const colors = values.map((value, index) => {
+                return `hsl(${(index / values.length) * 360}, 100%, 75%)`;
+            });
+
+            new Chart(reservasCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Número de Reservas',
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.2', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            reservasChartContainer.classList.add('active');
+        } else {
+            reservasChartContainer.classList.remove('active');
+        }
+
+        const mejorClienteCtx = document.getElementById('chart-container1').getContext('2d');
+        const mejorClienteData = /*[[${bestCustomerData}]]*/ {};
+        console.log("Datos del mejor cliente:", mejorClienteData);
+        
+        if (mejorClienteData && typeof mejorClienteData === 'object' && Object.keys(mejorClienteData).length > 0) {
+            const labels = Object.keys(mejorClienteData);
+            const values = Object.values(mejorClienteData);
+            const colors = values.map((value, index) => {
+                return `hsl(${(index / values.length) * 360}, 100%, 75%)`;
+            });
+
+            new Chart(mejorClienteCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mejor Cliente',
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: colors.map(color => color.replace('0.2', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            mejorClienteChartContainer.classList.add('active');
+        } else {
+            mejorClienteChartContainer.classList.remove('active');
+        }
+    });
+  </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('mejorClienteForm');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+
+        form.addEventListener('submit', function(event) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (endDate < startDate) {
+                event.preventDefault();  // Evita el envío del formulario
+                alert('La fecha de fin no puede ser anterior a la fecha de inicio.');
+            }
+        });
+    });
+  </script>
+
+  <script src="/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/chart.js/chart.umd.js"></script>
+  <script src="/vendor/echarts/echarts.min.js"></script>
+  <script src="/vendor/quill/quill.js"></script>
+  <script src="/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="/vendor/tinymce/tinymce.min.js"></script>
+  <script src="/vendor/php-email-form/validate.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/locales/es.min.js"></script>
+  <script src="/js/main.js"></script>
+
+</body>
+</html>

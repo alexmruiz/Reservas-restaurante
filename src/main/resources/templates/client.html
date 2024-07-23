@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Restaurante FGZ Reservas</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+
+  <meta name="_csrf" content="${_csrf.token}" />
+  <meta name="_csrf_header" content="${_csrf.headerName}" />
+
+
   <link href="/img/favicon.png" rel="icon">
   <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -21,17 +25,15 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
   <link href="/css/style.css" rel="stylesheet">
 </head>
-
 <body>
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href=" " class="logo d-flex align-items-center">
         <span class="d-none d-lg-block">Restaurante FGZ</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
-
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
         <li class="nav-item">
@@ -64,92 +66,72 @@
     </nav>
   </header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item">
-        <a class="nav-link " href="/admin-restaurante">
-          <i class="bi bi-calendar-event"></i>
-          <span>Reservados</span>
-        </a>
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+          <a class="nav-link " href="/admin-restaurante">
+            <i class="bi bi-calendar-event"></i>
+            <span>Reservados</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/estadisticas">
+              <i class="bi bi-bar-chart"></i>
+              <span>Estadísticas</span>
+          </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/estadisticas">
-            <i class="bi bi-bar-chart"></i>
-            <span>Estadísticas</span>
-        </a>
-    </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/clientes">
-          <i class="bi bi-people"></i>
-          <span>Usuarios</span>
-        </a>
-      </li>
-    </ul>
-  </aside><!-- End Sidebar -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/clientes">
+            <i class="bi bi-people"></i>
+            <span>Usuarios</span>
+          </a>
+        </li>
+      </ul>
+    </aside><!-- End Sidebar -->
   
   <main id="main" class="main">
     <section class="section dashboard">
       <div class="row">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Reservados</h5>
-
-
-            <!-- Formulario para el filtro por fecha -->
-            <form id="filterForm" action="#" th:action="@{/admin-restaurante}" method="get">
-              <div class="col-sm-4">
-              <label for="filterDate">Fecha:</label>
-              <input type="date" id="filterDate" class="form-control" name="filterDate" th:value="${filterDate}"/>
-            </div>
-              <label for="filterZone">Zona:</label>
-              <div class="col-sm-4">
-              <select id="filterZone" name="filterZone" class="form-select">
-                <option th:each="zone : ${zones}" th:value="${zone}" th:text="${zone}" th:selected="${zone == filterZone}"></option>
-                <option value="" th:selected="${filterZone == null || filterZone.isEmpty()}">Todas las zonas</option>
-              </select>
-              </div>
-            </form>
-            <br><br>
-
-
-            <!-- Condición para mostrar la tabla o el mensaje -->
-            <th:block th:if="${#lists.isEmpty(bookings)}">
-              <div class="text-center">
-              <h5>No tiene reservas.</h5>
-            </div>
-            </th:block>
-            <th:block th:unless="${#lists.isEmpty(bookings)}">
-            <table class="table">
+            <h5 class="card-title">Clientes</h5>
+            <form th:action="@{/clientes}" method="get" id="searchForm">
+              <input class="datatable-input" type="text" name="search" th:value="${search}" placeholder="Buscar por nombre">
+          </form>
+          <br><br>
+          <table class="table table-striped">
               <thead>
                   <tr>
-                      <th scope="col">#</th>
-            
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Apellido</th>
-                      <th scope="col">Comensales</th>
-                      <th scope="col">Zona</th>
-                      <th scope="col">Fecha</th>
-                      <th scope="col">Hora</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Activo</th>
                   </tr>
               </thead>
               <tbody>
-                  <!-- Utiliza Thymeleaf para iterar sobre cada booking y mostrar los datos -->
-                  <tr th:each="booking, iterStat : ${bookings}">
-                      <td th:text="${iterStat.index + 1}">1</td> <!-- Muestra el número secuencial -->
-                      <td th:text="${booking.appUser.name}">Nombre Usuario</td>
-                      <td th:text="${booking.appUser.lastname}">Apellido</td>
-                      <td th:text="${booking.persons == 0 ? booking.text : booking.persons}">2</td>
-                      <td th:text="${booking.zone}">Zona</td>
-                      <td th:text="${booking.getFormattedDate()}">Fecha</td>
-                      <td th:text="${booking.getFormattedTime()}">Hora</td>
+                  <tr th:each="user : ${clientPage.content}">
+                      <td th:text="${user.name}">John</td>
+                      <td th:text="${user.lastname}">Doe</td>
+                      <td th:text="${user.email}">john.doe@example.com</td>
+                      <td th:text="${user.phone}">123456789</td>
+                      <td>
+                          <input type="checkbox" th:checked="${user.active}" th:onchange="'toggleActiveStatus(' + ${user.id} + ', this.checked)'" />
+                      </td>
                   </tr>
               </tbody>
           </table>
-          
+          <br>
+          <div>
+              <span th:text="'Página ' + ${currentPage} + ' de ' + ${totalPages}">Página 1 de 10</span>
+              <div>
+                  <a th:if="${currentPage > 0}" th:href="@{/clientes(page=${currentPage - 1}, size=${size}, search=${search})}">Anterior</a>
+                  <a th:if="${currentPage + 1 < totalPages}" th:href="@{/clientes(page=${currentPage + 1}, size=${size}, search=${search})}">Siguiente</a>
+              </div>
+          </div>
           </div>
         </div>
-     
       </div>
     </section>
   </main>
@@ -160,26 +142,39 @@
     </div>
   </footer>
 
-
-
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const filterForm = document.getElementById("filterForm");
-      const filterDate = document.getElementById("filterDate");
-      const filterZone = document.getElementById("filterZone");
+  document.addEventListener('DOMContentLoaded', function() {
+    // Obtener los tokens CSRF
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-      filterDate.addEventListener("change", function() {
-        filterForm.submit();
-      });
+    // Función para cambiar el estado activo del usuario
+    window.toggleActiveStatus = function(userId, isActive) {
+      const confirmMessage = isActive ? 
+        "¿Estás seguro de que quieres activar a este usuario?" :
+        "¿Estás seguro de que quieres desactivar a este usuario?";
+      if (confirm(confirmMessage)) {
+        fetch('/usuarios/desactivar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            [csrfHeader]: csrfToken
+          },
+          body: new URLSearchParams({ userId: userId, active: isActive })
+        })
+        .then(response => response.text())
+        .then(data => {
+          alert(data);
+          location.reload();
+        })
+        .catch(error => console.error('Error:', error));
+      }
+    };
+  });
+</script>
 
-      filterZone.addEventListener("change", function() {
-        filterForm.submit();
-      });
-    });
-  </script>
+  
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <script src="/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -191,6 +186,5 @@
   <script src="/vendor/php-email-form/validate.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/locales/es.min.js"></script>
   <script src="/js/main.js"></script>
-
 </body>
 </html>

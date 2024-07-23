@@ -25,6 +25,7 @@ public class AppUser {
     private String role;
     private Date createAt;
     private String phone;
+    private Boolean active = true;
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Booking> bookings = new ArrayList<>();
@@ -119,5 +120,13 @@ public class AppUser {
         return "AppUser [id=" + id + ", name=" + name + ", lastname=" + lastname + ", email=" + email + ", password="
                 + password + ", confirmPassword=" + confirmPassword + ", role=" + role + ", createAt=" + createAt
                 + ", phone=" + phone + ", bookings=" + bookings + "]";
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

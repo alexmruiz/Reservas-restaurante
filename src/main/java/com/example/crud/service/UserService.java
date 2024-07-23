@@ -9,11 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -39,12 +40,15 @@ public class UserService implements UserDetailsService {
 
         return springUser;
     }
-    
-    // Obtiene todos los usuarios
-    public List<AppUser> allUser() {
-        return userRepository.findAll();
+    /************************Métodos para ver los clientes******** */
+    public Page<AppUser> findByRole(String role, Pageable pageable) {
+        return userRepository.findByRole(role, pageable);
     }
 
+    public Page<AppUser> searchByName(String role, String name, Pageable pageable) {
+        return userRepository.findByRoleAndNameContainingIgnoreCase(role, name, pageable);
+    }
+    /******************************************************************* */
     // Guarda un nuevo usuario
     public AppUser saveUser(AppUser appUser) {
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword())); // Encriptar la contraseña antes de guardar
@@ -81,6 +85,7 @@ public class UserService implements UserDetailsService {
     public AppUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+    
     public String changePassword(String email, String currentPassword, String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {
             return "Las nuevas contraseñas no coinciden";
@@ -102,6 +107,16 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(appUser);
     }
+
+    /*******************************************DESACTIVAR USUARIO************************** */
+    
+    public void setActiveStatus(long userId, boolean active) {
+        AppUser user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        user.setActive(active);
+        userRepository.save(user);
+    }
+
+
     
 
     

@@ -6,11 +6,14 @@ import com.example.crud.entity.Booking;
 import com.example.crud.entity.LoginForm;
 import com.example.crud.repository.UserRepository;
 import com.example.crud.service.BookingService;
+import com.example.crud.service.UserService;
 
 import jakarta.validation.Valid;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +22,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +41,9 @@ public class CountController {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private UserService userService;
 
-
-    
 
     //Endpoints para autenticación y registro
     @GetMapping("/")
@@ -47,17 +52,39 @@ public class CountController {
         return "login"; // Devuelve la vista del formulario de inicio de sesión
     }
 
+    
     @GetMapping("/admin-restaurante")
-    public String admin(Model model) {
-        List<Booking> bookings = bookingService.getAllBookingsWithUserData();
+    public String adminRestaurant(Model model, 
+                                  @RequestParam(required = false) String filterDate, 
+                                  @RequestParam(required = false) String filterZone) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // Use email as the username
+        AppUser appUser = userService.findByEmail(email); // Find user by email
+        model.addAttribute("appUser", appUser);
+    
+        List<String> zones = bookingService.getAllZones(); // Assuming you have a method to get all zones
+        model.addAttribute("zones", zones);
+    
+        // If no date is provided, use today's date
+        if (filterDate == null || filterDate.isEmpty()) {
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            filterDate = today.format(formatter);
+        }
+    
+        List<Booking> bookings;
+        if (filterZone == null || filterZone.isEmpty()) {
+            bookings = bookingService.getBookingsByDate(filterDate);
+        } else {
+            bookings = bookingService.getBookingsByDateAndZone(filterDate, filterZone);
+        }
+    
         model.addAttribute("bookings", bookings);
+        model.addAttribute("filterDate", filterDate);
+        model.addAttribute("filterZone", filterZone);
+    
         return "admin";
     }
-
-    
-
-
-    
 
     @GetMapping("/register")
     public String register(Model model) {

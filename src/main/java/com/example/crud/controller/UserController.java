@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -33,17 +35,7 @@ public class UserController {
     
     //Endpoints para operaciones CRUD de usuario
 
-    @GetMapping("/list")
-    public String viewUser(Model model) {
-        try {
-            List<AppUser> users = userService.allUser();
-            model.addAttribute("userFront", users);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error al mostrar los usuarios: " + e.getMessage());
-            return "error";
-        }
-        return "crudUser";
-    }
+
 
     @PostMapping("/saveuser")
     public String saveUser(@ModelAttribute AppUser appUser) {
@@ -154,6 +146,19 @@ public String updateProfile(@ModelAttribute("appUser") AppUser appUser, Model mo
 
         return "Usuario con ROLE_REST insertado correctamente";
     }
+
+   @PostMapping("/usuarios/desactivar")
+@ResponseBody
+public ResponseEntity<String> deactivateUser(@RequestParam long userId, @RequestParam boolean active) {
+    try {
+        userService.setActiveStatus(userId, active);
+        String message = active ? "Usuario activado con éxito" : "Usuario desactivado con éxito";
+        return ResponseEntity.ok(message);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cambiar el estado del usuario");
+    }
+}
 }
 
 
