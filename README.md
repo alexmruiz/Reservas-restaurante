@@ -25,30 +25,25 @@ Reservas-Restaurante es una aplicación diseñada con el framework Spring Boot, 
 
 ## Capturas de Pantalla
 
-### Vista de Inicio de Sesión
-![Vista de Inicio de Sesión y Registro]
-(Capturas/login.png)
-(Capturas/registro.png)
+### Vista de Inicio de Sesión y Registro
+![Vista de Inicio de Sesión](Capturas/login.png)
+![Vista de Registro](Capturas/registro.png)
 
 ### Vista de Reservas
-![Vista de Reservas]
-(Capturas/u1.png)
-(Capturas/u2.png)
-(Capturas/u3.png)
+![Vista de Reservas 1](Capturas/u1.png)
+![Vista de Reservas 2](Capturas/u2.png)
+![Vista de Reservas 3](Capturas/u3.png)
 
 ### Vista de Perfil de Usuario
-![Vista de Perfil de Usuario]
-(Capturas/u4.png)
-(Capturas/u5.png)
-(Capturas/u6.png)
+![Vista de Perfil de Usuario 1](Capturas/u4.png)
+![Vista de Perfil de Usuario 2](Capturas/u5.png)
+![Vista de Perfil de Usuario 3](Capturas/u6.png)
 
 ### Vista de Administración de Reservas
-![Vista de Administración de Reservas]
-(Capturas/r1.png)
-(Capturas/r2.png)
-(Capturas/r5.png)
+![Vista de Administración de Reservas 1](Capturas/r1.png)
+![Vista de Administración de Reservas 2](Capturas/r2.png)
+![Vista de Administración de Reservas 3](Capturas/r5.png)
 
 ### Vista de Análisis y Estadísticas
-![Vista de Análisis y Estadísticas]
-(Capturas/r3.png)
-(Capturas/r4.png)
+![Vista de Análisis y Estadísticas 1](Capturas/r3.png)
+![Vista de Análisis y Estadísticas 2](Capturas/r4.png)
