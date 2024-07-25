@@ -27,23 +27,47 @@ Reservas-Restaurante es una aplicación diseñada con el framework Spring Boot, 
 
 ### Vista de Inicio de Sesión y Registro
 ![Vista de Inicio de Sesión](Capturas/login.png)
+
+<br>
+
 ![Vista de Registro](Capturas/registro.png)
 
 ### Vista de Reservas
 ![Vista de Reservas 1](Capturas/u1.png)
+
+<br>
+
 ![Vista de Reservas 2](Capturas/u2.png)
+
+<br>
+
 ![Vista de Reservas 3](Capturas/u3.png)
 
 ### Vista de Perfil de Usuario
 ![Vista de Perfil de Usuario 1](Capturas/u4.png)
+
+<br>
+
 ![Vista de Perfil de Usuario 2](Capturas/u5.png)
+
+<br>
+
 ![Vista de Perfil de Usuario 3](Capturas/u6.png)
 
 ### Vista de Administración de Reservas
 ![Vista de Administración de Reservas 1](Capturas/r1.png)
+
+<br>
+
 ![Vista de Administración de Reservas 2](Capturas/r2.png)
+
+<br>
+
 ![Vista de Administración de Reservas 3](Capturas/r5.png)
 
 ### Vista de Análisis y Estadísticas
 ![Vista de Análisis y Estadísticas 1](Capturas/r3.png)
+
+<br>
+
 ![Vista de Análisis y Estadísticas 2](Capturas/r4.png)
