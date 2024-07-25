@@ -56,62 +56,66 @@
                       </div>
                       <!-- Mensaje de éxito -->
                       <div th:if="${success}" class="alert alert-success">¡Registro exitoso! Puedes <a th:href="@{/}">iniciar sesión aquí</a>.</div>
-                      <form method="post" th:action="@{/register}" th:object="${registerDto}">
-                          <!-- Campo oculto para CSRF -->
-                          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                  
-                          <div class="col-12 mb-3">
-                              <label for="yourName" class="form-label">Tu nombre*</label>
-                              <div class="col-sm-8">
-                                  <input type="text" name="name" class="form-control" id="yourName" th:field="*{name}" required>
-                                  <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errorclass="text-danger" 
-                                     th:errors="${registerDto.name}"></p>
-                              </div>
-                          </div>
-
-                          <div class="col-12 mb-3">
+                      <form method="post" action="/register" th:object="${registerDto}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                
+                        <div class="form-group">
+                            <label for="yourName" class="form-label">Tu nombre*</label>
+                            <div class="col-12">
+                                <input type="text" name="name" class="form-control" id="yourName" th:field="*{name}" required>
+                                <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errorclass="text-danger" th:errors="${registerDto.name}"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
                             <label for="yourLastname" class="form-label">Tus apellidos</label>
-                            <div class="col-sm-8">
+                            <div class="col-12">
                                 <input type="text" name="lastname" class="form-control" id="yourLastname" th:field="*{lastname}">
                                 <p th:if="${#fields.hasErrors('lastname')}" class="text-danger" th:errors="*{lastname}"></p>
                             </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                          <label for="yourPhone" class="form-label">Teléfono</label>
+                          <div class="col-12">
+                              <input type="text" name="phone" class="form-control" id="yourphone" th:field="*{phone}" minlength="9">
+                              <p th:if="${#fields.hasErrors('phone')}" class="text-danger" th:errors="*{phone}"></p>
                           </div>
-                  
-                          <div class="col-12 mb-3">
-                              <label for="yourEmail" class="form-label">Tu correo electrónico*</label>
-                              <div class="col-sm-8">
-                                <input type="email" name="email" class="form-control" id="yourEmail" th:field="*{email}" 
-                                required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Por favor ingrese un correo electrónico válido">
+                      </div>
+                      <br>
+                        <div class="form-group">
+                            <label for="yourEmail" class="form-label">Tu correo electrónico*</label>
+                            <div class="col-12">
+                                <input type="email" name="email" class="form-control" id="yourEmail" th:field="*{email}" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Por favor ingrese un correo electrónico válido">
                                 <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>
-                              </div>
-                          </div>
-                          
-                          <div class="col-12 mb-3">
-                              <label for="yourPassword" class="form-label">Contraseña*</label>
-                              <div class="col-sm-8">
-                                <input type="password" name="password" class="form-control" id="yourPassword" th:field="*{password}" 
-                                minlength="6" placeholder="Mínimo 6 caracteres">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="yourPassword" class="form-label">Contraseña*</label>
+                            <div class="col-12">
+                                <input type="password" name="password" class="form-control" id="yourPassword" th:field="*{password}" minlength="6" placeholder="Mínimo 6 caracteres">
                                 <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></p>
-                              </div>
-                          </div>
-                          
-                          <div class="col-12 mb-3">
-                              <label for="confirmPassword" class="form-label">Confirmar contraseña*</label>
-                              <div class="col-sm-8">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña*</label>
+                            <div class="col-12">
                                 <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
                                 <p th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}"></p>
-                              </div>
-                          </div>
-                  
-                          
-                  
-                          <div class="col-12 mb-3">
-                              <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>
-                          </div>
-                          <div class="col-12">
-                              <p class="small mb-0">¿Ya tienes una cuenta? <a th:href="@{/login}">Iniciar sesión</a></p>
-                          </div>
-                      </form>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="form-action">
+                            <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>
+                        </div>
+                
+                        <div class="col-12">
+                            <p class="small mb-0">¿Ya tienes una cuenta? <a href="/login">Iniciar sesión</a></p>
+                        </div>
+                    </form>
                   </div> 
               </div>
               

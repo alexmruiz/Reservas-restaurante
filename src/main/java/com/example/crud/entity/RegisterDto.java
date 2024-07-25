@@ -13,6 +13,8 @@ public class RegisterDto {
     @Email(message = "Debe ser una dirección de correo electrónico válida")
     private String email;
 
+    private String phone;
+
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     private String password;
 
@@ -58,5 +60,13 @@ public class RegisterDto {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

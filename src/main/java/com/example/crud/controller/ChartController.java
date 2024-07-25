@@ -2,11 +2,15 @@ package com.example.crud.controller;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +33,11 @@ public class ChartController {
     private UserService userService;
 
     @GetMapping("/estadisticas")
-    public String showStatisticsForm() {
+    public String showStatisticsForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // Use email as the username
+        AppUser appUser = userService.findByEmail(email); // Find user by email
+        model.addAttribute("appUser", appUser);
         return "chart"; // Vista del formulario
     }
 
@@ -38,7 +46,11 @@ public class ChartController {
             @RequestParam("year") int year,
             @RequestParam("type") String type,
             Model model) {
-    
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String email = authentication.getName(); // Use email as the username
+                AppUser appUser = userService.findByEmail(email); // Find user by email
+                model.addAttribute("appUser", appUser);
+
         Map<String, Long> data;
         String chartTitle;
         switch (type) {
@@ -72,28 +84,33 @@ public class ChartController {
         return "chart";
     }
     
-    @GetMapping("/mejor_cliente")
-    public String getBestCustomer(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            Model model) {
+@GetMapping("/mejor_cliente")
+public String getTop5Customers(
+        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        Model model) {
+
+    List<BestCustomer> top5Customers = bookingService.findTop5Customers(startDate, endDate);
+
+    Map<String, Long> bestCustomerData = top5Customers.stream()
+            .collect(Collectors.toMap(BestCustomer::getName, BestCustomer::getTotalBookings));
+
+    model.addAttribute("data", bestCustomerData);
+    model.addAttribute("chartTitle", "Top 5 Clientes del " + startDate + " al " + endDate);
+
+    // Simulate the chartData for the reservations chart as well
+    Map<String, Long> reservationsData = new HashMap<>();
+    // Add your logic to populate the reservationsData map
+    // Example: reservationsData.put("Customer1", 10);
+
+    model.addAttribute("chartData", reservationsData);
+
+    return "chart";
+}
+
+
     
-        BestCustomer bestCustomer = bookingService.findBestCustomer(startDate, endDate);
-    
-        Map<String, Long> bestCustomerData = new HashMap<>();
-        bestCustomerData.put(bestCustomer.getName(), bestCustomer.getTotalBookings());
-    
-        model.addAttribute("bestCustomerData", bestCustomerData);
-        model.addAttribute("bestCustomerTitle", "Mejor Cliente del " + startDate + " al " + endDate);
-    
-        // Intenta recuperar datos del gráfico de reservas del modelo, si existen
-        if (!model.containsAttribute("chartData")) {
-            model.addAttribute("chartData", new HashMap<>());
-            model.addAttribute("chartTitle", "No hay datos de reservas");
-        }
-    
-        return "chart";
-    }
+
     
     /*************CLIENTES*********************** */
 
@@ -103,6 +120,12 @@ public class ChartController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String search,
             Model model) {
+        
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String email = authentication.getName(); // Use email as the username
+                AppUser appUser = userService.findByEmail(email); // Find user by email
+                model.addAttribute("appUser", appUser);
+        
         Pageable pageable = PageRequest.of(page, size);
         Page<AppUser> clientPage;
 

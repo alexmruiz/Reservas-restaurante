@@ -118,6 +118,7 @@ public class CountController {
             AppUser newUser = new AppUser();
             newUser.setName(registerDto.getName());
             newUser.setLastname(registerDto.getLastname());
+            newUser.setPhone(registerDto.getPhone());
             newUser.setEmail(registerDto.getEmail());
             newUser.setRole("ROLE_CLIENT");
             newUser.setCreateAt(new Date());

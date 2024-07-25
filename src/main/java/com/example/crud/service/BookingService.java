@@ -232,21 +232,19 @@ import com.example.crud.entity.Booking;
         }
 
 
-        public BestCustomer findBestCustomer(LocalDate startDate, LocalDate endDate) {
+        public List<BestCustomer> findTop5Customers(LocalDate startDate, LocalDate endDate) {
             List<Booking> bookings = bookingRepository.findByDateBetween(startDate, endDate);
-    
+        
             Map<AppUser, Long> customerBookingCount = bookings.stream()
                     .collect(Collectors.groupingBy(Booking::getAppUser, Collectors.counting()));
-    
-            Map.Entry<AppUser, Long> bestCustomerEntry = customerBookingCount.entrySet().stream()
-                    .max(Map.Entry.comparingByValue())
-                    .orElseThrow(() -> new RuntimeException("No bookings found in the given period"));
-    
-            AppUser bestCustomer = bestCustomerEntry.getKey();
-            Long totalBookings = bestCustomerEntry.getValue();
-    
-            return new BestCustomer(bestCustomer.getName(), totalBookings);
+        
+            return customerBookingCount.entrySet().stream()
+                    .sorted(Map.Entry.<AppUser, Long>comparingByValue().reversed())
+                    .limit(5)
+                    .map(entry -> new BestCustomer(entry.getKey().getName(), entry.getValue()))
+                    .collect(Collectors.toList());
         }
+        
     }
 
     

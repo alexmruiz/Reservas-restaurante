@@ -146,7 +146,7 @@
                   
                   <div class="col-12 mb-3">
                     <button class="btn btn-primary w-100" type="submit">
-                      Generar gráfico
+                      Generar gráfico para reservas
                     </button>
                   </div>
                 </form>
@@ -167,7 +167,7 @@
 
                   <div class="col-12 mb-3">
                     <button class="btn btn-primary w-100" type="submit">
-                      Generar gráfico
+                      Generar gráfico para clientes
                     </button>
                   </div>
                 </form>
@@ -248,7 +248,7 @@
         }
 
         const mejorClienteCtx = document.getElementById('chart-container1').getContext('2d');
-        const mejorClienteData = /*[[${bestCustomerData}]]*/ {};
+        const mejorClienteData =/*[[${data}]]*/{};
         console.log("Datos del mejor cliente:", mejorClienteData);
         
         if (mejorClienteData && typeof mejorClienteData === 'object' && Object.keys(mejorClienteData).length > 0) {
