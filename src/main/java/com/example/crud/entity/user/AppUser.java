@@ -1,10 +1,12 @@
-package com.example.crud.entity;
+package com.example.crud.entity.user;
 
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.example.crud.entity.booking.Booking;
 
 @Entity
 @Table(name="users")

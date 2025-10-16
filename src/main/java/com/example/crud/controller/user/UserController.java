@@ -1,8 +1,8 @@
-package com.example.crud.controller;
+package com.example.crud.controller.user;
 
 
-import com.example.crud.entity.AppUser;
-import com.example.crud.service.UserService;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.service.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

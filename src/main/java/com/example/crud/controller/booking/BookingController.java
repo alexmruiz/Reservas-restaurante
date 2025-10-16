@@ -1,4 +1,4 @@
-package com.example.crud.controller;
+package com.example.crud.controller.booking;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.crud.entity.AppUser;
-import com.example.crud.entity.Booking;
-import com.example.crud.service.BookingService;
-import com.example.crud.service.UserService;
+import com.example.crud.entity.booking.Booking;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.service.booking.BookingService;
+import com.example.crud.service.user.UserService;
 
 
 @Controller

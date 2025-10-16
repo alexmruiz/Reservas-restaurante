@@ -1,4 +1,4 @@
-    package com.example.crud.service;
+    package com.example.crud.service.booking;
 
     import java.time.LocalDate;
     import java.time.LocalTime;
@@ -17,10 +17,11 @@
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
 
-    import com.example.crud.entity.AppUser;
-import com.example.crud.entity.BestCustomer;
-import com.example.crud.entity.Booking;
-    import com.example.crud.repository.BookingRepository;
+import com.example.crud.dto.booking.BestCustomer;
+import com.example.crud.entity.booking.Booking;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.repository.booking.BookingRepository;
+import com.example.crud.service.user.UserService;
 
     @Service
     public class BookingService {

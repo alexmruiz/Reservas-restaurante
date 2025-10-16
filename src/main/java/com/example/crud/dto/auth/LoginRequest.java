@@ -1,8 +1,8 @@
-package com.example.crud.entity;
+package com.example.crud.dto.auth;
 
 import jakarta.validation.constraints.NotEmpty;
 
-public class LoginForm {
+public class LoginRequest {
     @NotEmpty(message = "El correo electrónico es obligatorio")
     private String email;
 

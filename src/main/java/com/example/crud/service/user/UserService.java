@@ -1,7 +1,7 @@
-package com.example.crud.service;
+package com.example.crud.service.user;
 
-import com.example.crud.entity.AppUser;
-import com.example.crud.repository.UserRepository;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.repository.user.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

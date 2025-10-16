@@ -1,10 +1,12 @@
-package com.example.crud.entity;
+package com.example.crud.entity.booking;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import java.time.format.DateTimeFormatter;
+
+import com.example.crud.entity.user.AppUser;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

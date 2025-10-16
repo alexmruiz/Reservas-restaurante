@@ -1,4 +1,4 @@
-package com.example.crud.controller;
+package com.example.crud.controller.chart;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.example.crud.entity.AppUser;
-import com.example.crud.entity.BestCustomer;
-import com.example.crud.service.BookingService;
-import com.example.crud.service.UserService;
+import com.example.crud.dto.booking.BestCustomer;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.service.booking.BookingService;
+import com.example.crud.service.user.UserService;
 
 @Controller
 public class ChartController {

@@ -1,12 +1,12 @@
-package com.example.crud.controller;
+package com.example.crud.controller.user;
 
-import com.example.crud.entity.RegisterDto;
-import com.example.crud.entity.AppUser;
-import com.example.crud.entity.Booking;
-import com.example.crud.entity.LoginForm;
-import com.example.crud.repository.UserRepository;
-import com.example.crud.service.BookingService;
-import com.example.crud.service.UserService;
+import com.example.crud.entity.booking.Booking;
+import com.example.crud.entity.user.AppUser;
+import com.example.crud.repository.user.UserRepository;
+import com.example.crud.dto.auth.LoginRequest;
+import com.example.crud.dto.auth.RegisterDto;
+import com.example.crud.service.booking.BookingService;
+import com.example.crud.service.user.UserService;
 
 import jakarta.validation.Valid;
 
@@ -48,7 +48,7 @@ public class CountController {
     //Endpoints para autenticación y registro
     @GetMapping("/")
     public String login(Model model) {
-        model.addAttribute("loginForm", new LoginForm()); // Agrega un nuevo objeto LoginForm al modelo
+        model.addAttribute("loginForm", new LoginRequest()); // Agrega un nuevo objeto LoginForm al modelo
         return "login"; // Devuelve la vista del formulario de inicio de sesión
     }
 

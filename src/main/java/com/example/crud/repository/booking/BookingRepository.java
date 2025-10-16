@@ -1,4 +1,4 @@
-package com.example.crud.repository;
+package com.example.crud.repository.booking;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.crud.entity.AppUser;
-import com.example.crud.entity.Booking;
+import com.example.crud.entity.booking.Booking;
+import com.example.crud.entity.user.AppUser;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {

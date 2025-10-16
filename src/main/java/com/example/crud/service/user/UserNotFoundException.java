@@ -1,4 +1,4 @@
-package com.example.crud.service;
+package com.example.crud.service.user;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
