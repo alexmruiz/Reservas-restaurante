@@ -221,17 +221,14 @@ public class BookingService {
     }
 
     public Object getAllZones() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllZones'");
+        return Arrays.asList("Salon", "Terraza");
     }
 
     public Object getFilteredBookings(String filterDate, String filterZone) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFilteredBookings'");
+        return bookingRepository.findAll();
     }
 
     public Object resolveDate(String filterDate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'resolveDate'");
+        return filterDate;
     }
 }

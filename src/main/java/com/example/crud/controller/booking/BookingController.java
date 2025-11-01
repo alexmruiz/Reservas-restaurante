@@ -50,7 +50,11 @@ public class BookingController {
         return "reservas";
     }
 
-    /** Historial de reservas */
+    /**
+     * Historial de reservas
+     * @param model
+     * @return
+     */
     @GetMapping("/historial")
     public String showBookingHistory(Model model) {
         AppUser user = getAuthenticatedUser();
